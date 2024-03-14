@@ -1,8 +1,9 @@
-package task5
+package lab02
 
 import org.junit.*
 import org.junit.Assert.*
-import Optionals.*
+import lab02.Tasks.Optional
+
 
 class OptionalTest:
   @Test def emptyOptionalShouldBeEmpty(): Unit = {
