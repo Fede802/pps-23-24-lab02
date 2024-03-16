@@ -1,11 +1,8 @@
-package lab02
-
 import org.junit.*
 import org.junit.Assert.*
-import lab02.Tasks.Optional
 
 
-class OptionalTest:
+class TasksTest:
   @Test def emptyOptionalShouldBeEmpty(): Unit = {
     val empty = Optional.Empty()
     assertTrue(Optional.isEmpty(empty))
@@ -35,6 +32,6 @@ class OptionalTest:
 
   @Test def mapShouldReturnTransformedValueWhenNonEmpty(): Unit = {
     val nonEmpty = Optional.Maybe(0)
-    val result = Optional.map(nonEmpty, _ + 1)
+    val result = Optional.map(nonEmpty)(_ + 1)
     assertEquals(1, Optional.orElse(result, 1))
   }

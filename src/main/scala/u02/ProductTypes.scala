@@ -1,4 +1,4 @@
-package u02
+
 
 object ProductTypes extends App :
 

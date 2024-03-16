@@ -1,4 +1,4 @@
-package u02
+
 
 object Tuples extends App :
 
