@@ -135,7 +135,7 @@ object  Tasks extends App:
     def perimeter(shape: Shape): Double = shape match
       case Rectangle(w, h) => (w + h) * 2
       case Circle(r)       => 2 * Math.PI * r
-      case Square(s)       => s * s
+      case Square(s)       => s * 4
 
     def scale(shape: Shape, alpha: Double): Shape = shape match
       case Rectangle(w, h) => Rectangle(w * alpha, h * alpha)
