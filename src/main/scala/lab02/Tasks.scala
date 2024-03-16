@@ -5,56 +5,39 @@ import java.awt.print.Printable
 
 object Tasks extends App:
 
-  enum Functions[A, B]:
-    case SingleArg(f: A => B)
-    case DoubleArg(f: (A, A) => B)
-    case SingleArgPredicate(f: A => Boolean)
-
-  enum Inputs[A]:
-    case SingleItem(a: List[A])
-    case PairItem(a: List[(A, A)])
-
-  import Functions.*
-  import Inputs.*
-
   def printFormatter(s: String = ""): Unit = s match
     case "" => println("---------")
     case _ => {
       println("\n++++++++++++++++++"); println(s); println("++++++++++++++++++")
     }
 
-  enum Printable[A, B]:
-    case SingleArgFunction(f: SingleArg[A, B], i: SingleItem[A])
-    case DoubleArgFunction(f: DoubleArg[A, B], i: PairItem[A])
-    case SingleArgAndFunction(f: SingleArgPredicate[A, B], i: PairItem[A])
+  enum Sequence[A]:
+    case Cons(head: A, tail: Sequence[A])
+    case Nil()
 
-  object Printable:
+  object Sequence:
+    def apply[E](x: E*): Sequence[E] = x.isEmpty match
+      case true => Nil()
+      case _    => Cons(x.head, apply(x.tail: _*))
 
-    @annotation.tailrec
-    def _iterateTuple[A, B](
-        f: Functions[A, B],
-        l: Inputs[A],
-        index: Int
-    ): Unit = (f, l) match
-      case (SingleArg(fun), SingleItem(a)) if index < a.size => {
-        println(fun(a(index))); _iterateTuple(f, l, index + 1)
-      }
-      case (DoubleArg(fun), PairItem(a)) if index < a.size => {
-        println(fun(a(index)._1, a(index)._2)); _iterateTuple(f, l, index + 1)
-      }
-      case (SingleArgPredicate(fun), PairItem(a)) if index < a.size => {
-        println(fun(a(index)._1) && fun(a(index)._2));
-        _iterateTuple(f, l, index + 1)
-      }
-      case _ => printFormatter()
+  import Sequence.*
 
-    def printResult[A, B](printable: Printable[A, B]): Unit = printable match
-      case SingleArgFunction(f, i)    => _iterateTuple(f, i, 0)
-      case DoubleArgFunction(f, i)    => _iterateTuple(f, i, 0)
-      case SingleArgAndFunction(f, i) => _iterateTuple(f, i, 0)
+  object Evaluator:
+    def printResult[A, B](f: A => B)(l: Sequence[A]): Unit = l match
+      case Cons(h, t) => println(f(h)); printResult(f)(t)
+      case _          => printFormatter()
 
-  import Printable.*
+    def printResult[A, B](f: (A, A) => B)(l: Sequence[(A, A)]): Unit = l match
+      case Cons(h, t) => println(f(h(0), h(1))); printResult(f)(t)
+      case _          => printFormatter()
 
+    def printResult[A, B](f: A => Boolean, p: (Boolean, Boolean) => Boolean)(
+        l: Sequence[(A, A)]
+    ): Unit = l match
+      case Cons(h, t) => println(p(f(h(0)), f(h(1)))); printResult(f, p)(t)
+      case _          => printFormatter()
+
+  import Evaluator.*
   // Tasks part 2a
   // 3.a)
   printFormatter("Section 3a")
@@ -62,23 +45,13 @@ object Tasks extends App:
     case x if x >= 0 => "positive"
     case _           => "negative"
 
-  printResult(
-    SingleArgFunction(
-      SingleArg(evaluateSignInLambdaStyle),
-      SingleItem(List(2, 0, -1))
-    )
-  )
+  printResult(evaluateSignInLambdaStyle)(Sequence(2, 0, -1))
 
   def evaluateSignInMethodStyle(x: Int): String = x match
     case x if x >= 0 => "positive"
     case _           => "negative"
 
-  printResult(
-    SingleArgFunction(
-      SingleArg(evaluateSignInMethodStyle),
-      SingleItem(List(2, 0, -1))
-    )
-  )
+  printResult(evaluateSignInMethodStyle)(Sequence(2, 0, -1))
 
   // 3.b)
   printFormatter("Section 3b")
@@ -90,56 +63,21 @@ object Tasks extends App:
   val empty: String => Boolean = _ == ""
 
   val negWithLambdaStyle: (String => Boolean) => String => Boolean = f => !f(_)
-  printResult(
-    SingleArgFunction(
-      SingleArg(negWithLambdaStyle(empty)),
-      SingleItem(List("foo", ""))
-    )
-  )
-  printResult(
-    SingleArgAndFunction(
-      SingleArgPredicate(negWithLambdaStyle(empty)),
-      PairItem(List(("foo", "")))
-    )
-  )
+  printResult(negWithLambdaStyle(empty))(Sequence("foo", ""))
+  printResult(negWithLambdaStyle(empty), _ && !_)(Sequence(("foo", "")))
 
   def negWithMethodStyle(f: String => Boolean): String => Boolean = !f(_)
-  printResult(
-    SingleArgFunction(
-      SingleArg(negWithMethodStyle(empty)),
-      SingleItem(List("foo", ""))
-    )
-  )
-  printResult(
-    SingleArgAndFunction(
-      SingleArgPredicate(negWithMethodStyle(empty)),
-      PairItem(List(("foo", "")))
-    )
-  )
+  printResult(negWithMethodStyle(empty))(Sequence("foo", ""))
+  printResult(negWithMethodStyle(empty), _ && !_)(Sequence(("foo", "")))
 
   // 3.c)
   printFormatter("Section 3c")
   val positive: Int => Boolean = _ >= 0
   // not trivial to simulate/make genericNegWithLambdaStyle
   def genericNegWithMethodStyle[A](f: A => Boolean): A => Boolean = !f(_)
-  printResult(
-    SingleArgFunction(
-      SingleArg(genericNegWithMethodStyle(empty)),
-      SingleItem(List("foo", ""))
-    )
-  )
-  printResult(
-    SingleArgAndFunction(
-      SingleArgPredicate(genericNegWithMethodStyle(empty)),
-      PairItem(List(("foo", "")))
-    )
-  )
-  printResult(
-    SingleArgFunction(
-      SingleArg(genericNegWithMethodStyle(positive)),
-      SingleItem(List(2, 0, -1))
-    )
-  )
+  printResult(genericNegWithMethodStyle(empty))(Sequence("foo", ""))
+  printResult(genericNegWithMethodStyle(empty), _ && !_)(Sequence(("foo", "")))
+  printResult(genericNegWithMethodStyle(positive))(Sequence(2, 0, -1))
 
   // Tasks part 2b
   // 4)
@@ -152,18 +90,11 @@ object Tasks extends App:
   // 5)
   printFormatter("Section 5")
   def compose(f: Int => Int, g: Int => Int): Int => Int = i => f(g(i))
-  printResult(
-    SingleArgFunction(SingleArg(compose(_ - 1, _ * 2)), SingleItem(List(5)))
-  )
+  printResult(compose(_ - 1, _ * 2))(Sequence(5))
 
   // the constraint is continuity of types between g and f (output of g must be equal to input of f)
   def genericCompose[A, B, C](f: B => C, g: A => B): A => C = i => f(g(i))
-  printResult(
-    SingleArgFunction(
-      SingleArg(genericCompose[Int, Int, Int](_ - 1, _ * 2)),
-      SingleItem(List(5))
-    )
-  )
+  printResult(genericCompose[Int, Int, Int](_ - 1, _ * 2))(Sequence(5))
 
   // Tasks part 3
   // 6)
@@ -174,9 +105,7 @@ object Tasks extends App:
   def gcd(a: Int, b: Int): Int = b match
     case b if b == 0 => a
     case _           => gcd(b, a % b)
-  printResult(
-    DoubleArgFunction(DoubleArg(gcd), PairItem(List((8, 12), (7, 14))))
-  )
+  printResult(gcd)(Sequence((8, 12), (7, 14)))
 
   // Tasks part 4
   // 7)
