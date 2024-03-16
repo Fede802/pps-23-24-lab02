@@ -89,45 +89,45 @@ class TasksTest {
 
     //to test shape creation with negative values
 
-  @Test def emptyOptionalShouldBeEmpty(): Unit = {
+  @Test def emptyOptionalShouldBeEmpty(): Unit = 
     val empty = Optional.Empty()
     assertTrue(Optional.isEmpty(empty))
-  }
+  
 
-  @Test def nonEmptyOptionalShouldNotBeEmpty(): Unit = {
+  @Test def nonEmptyOptionalShouldNotBeEmpty(): Unit = 
     val nonEmpty = Optional.Maybe(0)
     assertFalse(Optional.isEmpty(nonEmpty))
-  }
+  
 
-  @Test def orElseShouldReturnDefaultWhenEmpty(): Unit = {
+  @Test def orElseShouldReturnDefaultWhenEmpty(): Unit = 
     val nonEmpty = Optional.Maybe(0)
     assertEquals(0, Optional.orElse(nonEmpty, 1))
-  }
+  
 
-  @Test def orElseShouldReturnValueWhenNonEmpty(): Unit = {
+  @Test def orElseShouldReturnValueWhenNonEmpty(): Unit = 
     val empty = Optional.Empty()
     assertEquals(1, Optional.orElse(empty, 1))
-  }
+  
 
-  @Test def mapShouldReturnEmptyWhenEmpty(): Unit = {
+  @Test def mapShouldReturnEmptyWhenEmpty(): Unit = 
     val empty: Optional[Int] = Optional.Empty()
     val result = Optional.map(empty)(_ + 1)
     assertTrue(Optional.isEmpty(result))
-  }
+  
 
-  @Test def mapShouldReturnTransformedValueWhenNonEmpty(): Unit = {
+  @Test def mapShouldReturnTransformedValueWhenNonEmpty(): Unit = 
     val nonEmpty = Optional.Maybe(0)
     val result = Optional.map(nonEmpty)(_ + 1)
     assertEquals(1, Optional.orElse(result, 1))
-  }
+  
 
-  @Test def filterShouldReturnEmptyWhenEmpty(): Unit = {
+  @Test def filterShouldReturnEmptyWhenEmpty(): Unit = 
     val empty: Optional[Int] = Optional.Empty()
     val result = Optional.filter(empty)(_ > 10)
     assertTrue(Optional.isEmpty(result))
-  }
+  
 
-  @Test def filterShouldReturnWhenConditionIsSatisfied(): Unit = {
+  @Test def filterShouldReturnWhenConditionIsSatisfied(): Unit = 
     val valid = Optional.Maybe(20)
     val invalid = Optional.Maybe(0)
     val filter: Int => Boolean = _ > 10
@@ -135,6 +135,6 @@ class TasksTest {
     val invalidResult = Optional.filter(invalid)(filter)
     assertEquals(20, Optional.orElse(validResult, 1))
     assertTrue(Optional.isEmpty(invalidResult))
-  }
+  
 
 }
