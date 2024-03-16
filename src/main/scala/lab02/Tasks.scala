@@ -1,6 +1,6 @@
 package lab02
 
-object  Tasks extends App:
+object Tasks extends App:
 
   def printFormatter(s: String = ""): Unit = s match
     case "" => println("---------")
@@ -36,7 +36,6 @@ object  Tasks extends App:
       case _          => printFormatter()
 
   import Evaluator.*
-
 
   // Tasks – part 2a (functions)
   // 3.a)
@@ -76,37 +75,35 @@ object  Tasks extends App:
 
   // non trivial to simulate/make genericNegWithLambdaStyle
   def genericNegWithMethodStyle[A](f: A => Boolean): A => Boolean = !f(_)
-  
+
   printResult(genericNegWithMethodStyle(empty))(Sequence("foo", ""))
   printResult(genericNegWithMethodStyle(empty), _ && !_)(Sequence(("foo", "")))
   printResult(genericNegWithMethodStyle(positive))(Sequence(2, 0, -1))
 
-  
   // Tasks – part 2b (functions)
   // 4)
   printFormatter("Section 4")
-  
+
   val p1: Integer => Integer => Boolean => Boolean = x => y => z => x < y == z
-  
+
   val p2: (Integer, Integer, Boolean) => Boolean = _ <= _ == _
-  
+
   def p3(x: Integer)(y: Integer)(z: Boolean): Boolean = x <= y == z
-  
+
   def p4(x: Integer, y: Integer, z: Boolean): Boolean = x <= y == z
 
   // 5)
   printFormatter("Section 5")
 
   def compose(f: Int => Int, g: Int => Int): Int => Int = i => f(g(i))
-  
+
   printResult(compose(_ - 1, _ * 2))(Sequence(5))
 
-  //the constraint is continuity of types between g and f (output of g must be equal to input of f)
+  // the constraint is continuity of types between g and f (output of g must be equal to input of f)
   def genericCompose[A, B, C](f: B => C, g: A => B): A => C = i => f(g(i))
-  
+
   printResult(genericCompose[Int, Int, Int](_ - 1, _ * 2))(Sequence(5))
 
-  
   // Tasks – part 3 (recursion)
   // 6)
   printFormatter("Section 6")
@@ -117,10 +114,9 @@ object  Tasks extends App:
   def gcd(a: Int, b: Int): Int = b match
     case 0 => a
     case _ => gcd(b, a % b)
-    
+
   printResult(gcd)(Sequence((8, 12), (7, 14)))
 
-  
   // Tasks – part 4 (sum types, product types, modules)
   // 7)
   printFormatter("Section 7")
@@ -142,11 +138,10 @@ object  Tasks extends App:
       case Circle(r)       => Circle(r * alpha)
       case Square(s)       => Square(s * alpha)
 
-
   // Tasks part 5
   // 8)
   printFormatter("Section 8")
-  
+
   enum Optional[A]:
     case Maybe(value: A)
     case Empty()
@@ -159,12 +154,12 @@ object  Tasks extends App:
 
     def orElse[A, B >: A](o: Optional[A], default: B): B = o match
       case Maybe(v) => v
-      case _ => default
+      case _        => default
 
     def map[A, B](o: Optional[A])(f: A => B): Optional[B] = o match
       case Maybe(v) => Maybe(f(v))
-      case _ => Empty()
-        
+      case _        => Empty()
+
     def filter[A](o: Optional[A])(f: A => Boolean): Optional[A] = o match
       case Maybe(v) if (f(v)) => Maybe(v)
       case _                  => Empty()
