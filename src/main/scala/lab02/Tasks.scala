@@ -1,12 +1,10 @@
 package lab02
 
 object Tasks extends App:
-  
+
   def printFormatter(s: String = ""): Unit = s match
     case "" => println("---------")
-    case _ => {
-      println("\n++++++++++++++++++"); println(s); println("++++++++++++++++++")
-    }
+    case _  => println("\n++++++++++++++++++"); println(s); println("++++++++++++++++++")
 
   enum Sequence[A]:
     case Cons(head: A, tail: Sequence[A])
