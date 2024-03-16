@@ -1,7 +1,7 @@
 package lab02
 
 object Tasks extends App:
-
+  
   def printFormatter(s: String = ""): Unit = s match
     case "" => println("---------")
     case _ => {
@@ -37,7 +37,7 @@ object Tasks extends App:
 
   import Evaluator.*
 
-  // Tasks – part 2a (functions)
+  // Tasks – part 2a (functions), svolto da solo
   // 3.a)
   printFormatter("Section 3a")
 
@@ -80,7 +80,7 @@ object Tasks extends App:
   printResult(genericNegWithMethodStyle(empty), _ && !_)(Sequence(("foo", "")))
   printResult(genericNegWithMethodStyle(positive))(Sequence(2, 0, -1))
 
-  // Tasks – part 2b (functions)
+  // Tasks – part 2b (functions), svolto da solo
   // 4)
   printFormatter("Section 4")
 
@@ -104,7 +104,7 @@ object Tasks extends App:
 
   printResult(genericCompose[Int, Int, Int](_ - 1, _ * 2))(Sequence(5))
 
-  // Tasks – part 3 (recursion)
+  // Tasks – part 3 (recursion), svolto da solo
   // 6)
   printFormatter("Section 6")
 
@@ -117,7 +117,7 @@ object Tasks extends App:
 
   printResult(gcd)(Sequence((8, 12), (7, 14)))
 
-  // Tasks – part 4 (sum types, product types, modules)
+  // Tasks – part 4 (sum types, product types, modules), svolto da solo
   // 7)
   printFormatter("Section 7")
 
@@ -138,7 +138,7 @@ object Tasks extends App:
       case Circle(r)       => Circle(r * alpha)
       case Square(s)       => Square(s * alpha)
 
-  // Tasks part 5
+  // Tasks – part 5 (more functional combinators), svolto da solo
   // 8)
   printFormatter("Section 8")
 
