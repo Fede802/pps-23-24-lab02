@@ -107,7 +107,6 @@ object Tasks extends App:
   printFormatter("Section 6")
 
   // didn't found an intuitive non tail-recursive version
-  // the condition of Euclidean algorithm need b > 0 not a > b
   @annotation.tailrec
   def gcd(a: Int, b: Int): Int = b match
     case 0 => a
