@@ -107,6 +107,7 @@ object Tasks extends App:
   printFormatter("Section 6")
 
   // didn't found an intuitive non tail-recursive version
+  // if b > a in the first step a % b = a, so b and a are switched and then the algoritm continue as intended
   @annotation.tailrec
   def gcd(a: Int, b: Int): Int = b match
     case 0 => a
